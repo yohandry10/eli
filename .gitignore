@@ -8,3 +8,13 @@ node_modules/
 .next/
 .env*.local
 .DS_Store
+
+# Build outputs / binaries
+out/
+src-tauri/target/
+*.exe
+*.dll
+*.lib
+*.pdb
+*.msi
+*.msix

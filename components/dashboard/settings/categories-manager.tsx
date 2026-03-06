@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/select'
 import { toast } from 'sonner'
 import { Trash2, Plus } from 'lucide-react'
+import { getCategories, createCategory } from '@/lib/services'
 
 const categorySchema = z.object({
   name: z.string().min(1, 'El nombre de la categoría es requerido'),
@@ -58,11 +59,8 @@ export function CategoriesManager() {
   const fetchCategories = async () => {
     try {
       setIsLoading(true)
-      const response = await fetch('/api/categories')
-      if (response.ok) {
-        const data = await response.json()
-        setCategories(data)
-      }
+      const data = await getCategories()
+      setCategories(data as Category[])
     } catch (error) {
       toast.error('Failed to load categories')
     } finally {
@@ -73,18 +71,8 @@ export function CategoriesManager() {
   const onSubmit = async (values: CategoryFormValues) => {
     setIsSubmitting(true)
     try {
-      const response = await fetch('/api/categories', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to create category')
-      }
-
-      const data = await response.json()
-      setCategories([...categories, ...data])
+      const data = await createCategory(values)
+      setCategories([...categories, ...(data as Category[])])
       form.reset()
       toast.success('Categoría creada correctamente')
     } catch (error) {

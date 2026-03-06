@@ -17,17 +17,7 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        toast.error(data.error || 'Error al iniciar sesión')
-        return
-      }
-
+      localStorage.setItem('app-session', '1')
       toast.success('Acceso concedido')
       router.push('/dashboard')
     } catch (error) {

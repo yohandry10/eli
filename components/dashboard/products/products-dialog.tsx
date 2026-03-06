@@ -31,6 +31,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
+import { getCategories, createProduct } from '@/lib/services'
 
 const productsSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido'),
@@ -79,11 +80,8 @@ export function ProductsDialog({ open, onOpenChange }: ProductsDialogProps) {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('/api/categories')
-      if (response.ok) {
-        const data = await response.json()
-        setCategories(data)
-      }
+      const data = await getCategories()
+      setCategories(data)
     } catch (error) {
       console.error('Failed to fetch categories')
     }
@@ -92,30 +90,14 @@ export function ProductsDialog({ open, onOpenChange }: ProductsDialogProps) {
   const onSubmit = async (values: ProductsFormValues) => {
     setIsLoading(true)
     try {
-      // Para precio variable, default_price = 0
       const priceToSave = values.pricing_type === 'variable' ? 0 : values.default_price
 
-      const payload: any = {
+      await createProduct({
         name: values.name,
         default_price: priceToSave,
         is_active: values.is_active,
-      }
-
-      // category_id es opcional —  si viene vacío no lo mandamos  
-      if (values.category_id && values.category_id !== '') {
-        payload.category_id = values.category_id
-      }
-
-      const response = await fetch('/api/products', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        category_id: values.category_id || undefined,
       })
-
-      if (!response.ok) {
-        const err = await response.json()
-        throw new Error(err.error || 'Error al crear servicio')
-      }
 
       toast.success('Servicio creado correctamente')
       form.reset()

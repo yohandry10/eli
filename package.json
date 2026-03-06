@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "tauri": "tauri",
+    "desktop:dev": "tauri dev",
+    "desktop:build": "tauri build"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -39,6 +42,7 @@
     "@radix-ui/react-tooltip": "1.2.8",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.45.0",
+    "@tauri-apps/api": "2",
     "@vercel/analytics": "1.6.1",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
@@ -64,6 +68,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.0",
+    "@tauri-apps/cli": "2",
     "@types/node": "^22",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",

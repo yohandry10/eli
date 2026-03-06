@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/form'
 import { toast } from 'sonner'
 import { Trash2, Plus } from 'lucide-react'
+import { getPaymentMethods, createPaymentMethod } from '@/lib/services'
 
 const paymentMethodSchema = z.object({
   name: z.string().min(1, 'El nombre del método de pago es requerido'),
@@ -49,11 +50,8 @@ export function PaymentMethodsManager() {
   const fetchPaymentMethods = async () => {
     try {
       setIsLoading(true)
-      const response = await fetch('/api/payment-methods')
-      if (response.ok) {
-        const data = await response.json()
-        setPaymentMethods(data)
-      }
+      const data = await getPaymentMethods()
+      setPaymentMethods(data as PaymentMethod[])
     } catch (error) {
       toast.error('Error al cargar métodos de pago')
     } finally {
@@ -64,18 +62,8 @@ export function PaymentMethodsManager() {
   const onSubmit = async (values: PaymentMethodFormValues) => {
     setIsSubmitting(true)
     try {
-      const response = await fetch('/api/payment-methods', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to create payment method')
-      }
-
-      const data = await response.json()
-      setPaymentMethods([...paymentMethods, ...data])
+      const data = await createPaymentMethod(values)
+      setPaymentMethods([...paymentMethods, ...(data as PaymentMethod[])])
       form.reset()
       toast.success('Método de pago creado correctamente')
     } catch (error) {

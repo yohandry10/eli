@@ -31,6 +31,7 @@ import {
 } from '@/components/ui/form'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
+import { getCategories, createExpense } from '@/lib/services'
 
 const expensesSchema = z.object({
   date: z.string(),
@@ -72,11 +73,8 @@ export function ExpensesDialog({ open, onOpenChange }: ExpensesDialogProps) {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('/api/categories')
-      if (response.ok) {
-        const data = await response.json()
-        setCategories(data)
-      }
+      const data = await getCategories()
+      setCategories(data)
     } catch (error) {
       console.error('Failed to fetch categories')
     }
@@ -85,20 +83,10 @@ export function ExpensesDialog({ open, onOpenChange }: ExpensesDialogProps) {
   const onSubmit = async (values: ExpensesFormValues) => {
     setIsLoading(true)
     try {
-      const response = await fetch('/api/expenses', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to create expense')
-      }
-
+      await createExpense(values)
       toast.success('Gasto creado correctamente')
       form.reset()
       onOpenChange(false)
-      // Recargar la tabla de gastos
       window.location.reload()
     } catch (error) {
       toast.error('Error al crear el gasto')

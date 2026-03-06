@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CategoriesManager } from '@/components/dashboard/settings/categories-manager'
 import { PaymentMethodsManager } from '@/components/dashboard/settings/payment-methods-manager'
+import { Download, Monitor } from 'lucide-react'
 
 export default function SettingsPage() {
   return (
@@ -20,6 +20,7 @@ export default function SettingsPage() {
           <TabsList>
             <TabsTrigger value="categories">Categorías</TabsTrigger>
             <TabsTrigger value="payment-methods">Métodos de Pago</TabsTrigger>
+            <TabsTrigger value="desktop">App de escritorio</TabsTrigger>
           </TabsList>
 
           <TabsContent value="categories" className="mt-6">
@@ -28,6 +29,29 @@ export default function SettingsPage() {
 
           <TabsContent value="payment-methods" className="mt-6">
             <PaymentMethodsManager />
+          </TabsContent>
+
+          <TabsContent value="desktop" className="mt-6">
+            <div className="rounded-xl border bg-card p-8 flex flex-col items-center text-center gap-4 max-w-md mx-auto">
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
+                <Monitor className="w-7 h-7 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold mb-1">App de escritorio</h2>
+                <p className="text-muted-foreground text-sm">
+                  Instala LavaPro en tu PC para usarlo sin navegador, más rápido y siempre disponible.
+                </p>
+              </div>
+              <a
+                href="/downloads/LavaPro-setup.exe"
+                download
+                className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 font-medium px-6 py-2.5 rounded-lg transition-colors"
+              >
+                <Download className="w-4 h-4" />
+                Descargar para Windows
+              </a>
+              <p className="text-xs text-muted-foreground">v1.0.0 · Windows 10/11 · 64-bit</p>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
