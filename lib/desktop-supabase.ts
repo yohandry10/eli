@@ -4,8 +4,12 @@ let _adminSupabase: SupabaseClient | null = null
 
 export function getAdminSupabase(): SupabaseClient {
   if (!_adminSupabase) {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-    const serviceRoleKey = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY!
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const serviceRoleKey =
+      process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (!supabaseUrl || !serviceRoleKey) {
+      throw new Error('Faltan variables de Supabase (NEXT_PUBLIC_SUPABASE_URL / KEY)')
+    }
     _adminSupabase = createClient(supabaseUrl, serviceRoleKey, {
       auth: {
         persistSession: false,
@@ -21,30 +25,29 @@ let cachedOwnerUserId: string | null = null
 export async function getOwnerUserId(): Promise<string> {
   if (cachedOwnerUserId) return cachedOwnerUserId
 
-  const adminSupabase = getAdminSupabase()
-  const { data: usersData, error: listError } = await adminSupabase.auth.admin.listUsers({
-    page: 1,
-    perPage: 1,
-  })
-
-  if (listError) throw listError
-
-  let ownerUserId = usersData.users[0]?.id
-
-  if (!ownerUserId) {
-    const seedEmail = `owner-${Date.now()}@local.invalid`
-    const seedPassword = `Owner-${Date.now()}-Aa1!`
-    const { data: createdUserData, error: createUserError } = await adminSupabase.auth.admin.createUser({
-      email: seedEmail,
-      password: seedPassword,
-      email_confirm: true,
-    })
-    if (createUserError || !createdUserData.user?.id) {
-      throw createUserError ?? new Error('Failed to create owner user')
-    }
-    ownerUserId = createdUserData.user.id
+  const envOwnerUserId = process.env.NEXT_PUBLIC_OWNER_USER_ID?.trim()
+  if (envOwnerUserId) {
+    cachedOwnerUserId = envOwnerUserId
+    return envOwnerUserId
   }
 
-  cachedOwnerUserId = ownerUserId
-  return ownerUserId
+  const adminSupabase = getAdminSupabase()
+
+  const ownerCandidates = await Promise.all([
+    adminSupabase.from('sales').select('owner_user_id').limit(1).maybeSingle(),
+    adminSupabase.from('expenses').select('owner_user_id').limit(1).maybeSingle(),
+    adminSupabase.from('products').select('owner_user_id').limit(1).maybeSingle(),
+    adminSupabase.from('categories').select('owner_user_id').limit(1).maybeSingle(),
+    adminSupabase.from('payment_methods').select('owner_user_id').limit(1).maybeSingle(),
+  ])
+
+  for (const candidate of ownerCandidates) {
+    const ownerId = candidate.data?.owner_user_id
+    if (!candidate.error && ownerId) {
+      cachedOwnerUserId = ownerId
+      return ownerId
+    }
+  }
+
+  throw new Error('No se pudo resolver owner_user_id. Configura NEXT_PUBLIC_OWNER_USER_ID.')
 }

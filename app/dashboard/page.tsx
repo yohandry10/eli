@@ -6,20 +6,29 @@ import { TrendingUp, TrendingDown, DollarSign, Activity, ShoppingCart, Percent }
 import { Skeleton } from '@/components/ui/skeleton'
 import { PieChart, Pie, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts'
 import { getStats, getChartData } from '@/lib/services'
+import { Button } from '@/components/ui/button'
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<any>(null)
   const [chartData, setChartData] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => { fetchData() }, [])
 
   const fetchData = async () => {
     try {
+      setLoadError(null)
+      setIsLoading(true)
       const [statsData, chartDataResult] = await Promise.all([getStats(), getChartData()])
       setStats(statsData)
       setChartData(chartDataResult)
-    } catch (error) { console.error('Failed to fetch data', error) }
+    } catch (error) {
+      console.error('Failed to fetch data', error)
+      setStats(null)
+      setChartData(null)
+      setLoadError('No se pudo cargar el resumen. Verifica la configuración de Supabase e inténtalo otra vez.')
+    }
     finally { setIsLoading(false) }
   }
 
@@ -36,13 +45,33 @@ export default function DashboardPage() {
     </Card>
   )
 
-  if (isLoading || !stats) return (
+  if (isLoading) return (
     <div className='p-8'><div className='max-w-7xl mx-auto'>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
         {[...Array(9)].map((_, i) => <Skeleton key={i} className='h-32' />)}
       </div>
     </div></div>
   )
+
+  if (!stats) {
+    return (
+      <div className='p-8'>
+        <div className='max-w-3xl mx-auto'>
+          <Card>
+            <CardHeader>
+              <CardTitle>Error al cargar el panel</CardTitle>
+            </CardHeader>
+            <CardContent className='space-y-4'>
+              <p className='text-sm text-muted-foreground'>
+                {loadError || 'No se pudieron cargar los datos del panel.'}
+              </p>
+              <Button onClick={fetchData}>Reintentar</Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className='p-4 md:p-8'><div className='max-w-7xl mx-auto'>
