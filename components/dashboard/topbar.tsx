@@ -28,6 +28,18 @@ export function DashboardTopbar() {
   const router = useRouter()
   const [open, setOpen] = useState(false)
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    setOpen(false)
+    if (typeof window === 'undefined') return
+    const protocol = window.location.protocol
+    const isDesktopProtocol =
+      protocol === 'tauri:' || protocol === 'asset:' || protocol === 'app:' || protocol === 'file:'
+    if (!isDesktopProtocol) return
+    e.preventDefault()
+    const desktopHref = href === '/dashboard' ? '/dashboard.html' : `${href}.html`
+    window.location.assign(desktopHref)
+  }
+
   const handleLogout = () => {
     try {
       localStorage.removeItem('app-session')
@@ -67,7 +79,7 @@ export function DashboardTopbar() {
                       isActive ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted'
                     )}
                   >
-                    <Link href={item.href} onClick={() => setOpen(false)}>
+                    <Link href={item.href} onClick={(e) => handleNavClick(e, item.href)}>
                       <Icon className="mr-2 h-4 w-4" />
                       {item.label}
                     </Link>

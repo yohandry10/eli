@@ -47,6 +47,17 @@ export function DashboardSidebar() {
   const pathname = usePathname()
   const router = useRouter()
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (typeof window === 'undefined') return
+    const protocol = window.location.protocol
+    const isDesktopProtocol =
+      protocol === 'tauri:' || protocol === 'asset:' || protocol === 'app:' || protocol === 'file:'
+    if (!isDesktopProtocol) return
+    e.preventDefault()
+    const desktopHref = href === '/dashboard' ? '/dashboard.html' : `${href}.html`
+    window.location.assign(desktopHref)
+  }
+
   const handleLogout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST' })
@@ -84,7 +95,7 @@ export function DashboardSidebar() {
                   : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
               )}
             >
-              <Link href={item.href}>
+              <Link href={item.href} onClick={(e) => handleNavClick(e, item.href)}>
                 <Icon className="mr-2 h-4 w-4" />
                 {item.label}
               </Link>

@@ -18,6 +18,6 @@ src-tauri/target/
 *.pdb
 *.msi
 *.msix
-!public/downloads/*.exe
+public/downloads/*.exe
 
 .vercel
