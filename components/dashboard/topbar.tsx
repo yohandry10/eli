@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Menu, User, LayoutDashboard, TrendingUp, TrendingDown, Package, Settings, LogOut } from 'lucide-react'
+import { Menu, User, LayoutDashboard, TrendingUp, TrendingDown, Package, Settings, LogOut, Users, Boxes } from 'lucide-react'
 import {
   Sheet,
   SheetContent,
@@ -20,6 +20,8 @@ const navItems = [
   { label: 'Ventas', href: '/dashboard/sales', icon: TrendingUp },
   { label: 'Gastos', href: '/dashboard/expenses', icon: TrendingDown },
   { label: 'Servicios', href: '/dashboard/products', icon: Package },
+  { label: 'Clientes', href: '/dashboard/clients', icon: Users },
+  { label: 'Inventario', href: '/dashboard/inventory', icon: Boxes },
   { label: 'Configuración', href: '/dashboard/settings', icon: Settings },
 ]
 
@@ -31,12 +33,11 @@ export function DashboardTopbar() {
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     setOpen(false)
     if (typeof window === 'undefined') return
-    const protocol = window.location.protocol
-    const isDesktopProtocol =
-      protocol === 'tauri:' || protocol === 'asset:' || protocol === 'app:' || protocol === 'file:'
-    if (!isDesktopProtocol) return
+    const isTauri = !!(window as any).__TAURI_INTERNALS__
+    const isTauriProd = isTauri && window.location.hostname === 'tauri.localhost'
+    if (!isTauriProd) return
     e.preventDefault()
-    const desktopHref = href === '/dashboard' ? '/dashboard.html' : `${href}.html`
+    const desktopHref = href === '/dashboard' ? '/dashboard.html' : `/dashboard${href.replace('/dashboard', '')}.html`
     window.location.assign(desktopHref)
   }
 
@@ -61,7 +62,7 @@ export function DashboardTopbar() {
           </SheetTrigger>
           <SheetContent side="left" className="w-64 p-0 flex flex-col">
             <SheetHeader className="p-6 border-b border-border text-left">
-              <SheetTitle className="text-2xl font-bold">LavaPro</SheetTitle>
+              <SheetTitle className="text-2xl font-bold">BlessFresh</SheetTitle>
               <p className="text-xs text-muted-foreground mt-1">Panel de Control</p>
             </SheetHeader>
             <nav className="flex-1 p-4 space-y-2 overflow-y-auto">

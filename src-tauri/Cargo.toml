@@ -1,7 +1,7 @@
 [package]
-name = "lavapro"
+name = "blessfresh"
 version = "0.1.3"
-description = "LavaPro - Sistema de Gestión para Lavandería"
+description = "BlessFresh - Sistema de Gestión para Lavandería"
 authors = []
 edition = "2021"
 

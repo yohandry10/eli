@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema/desktop-schema.json",
   "identifier": "default",
-  "description": "Default capabilities for LavaPro desktop app",
+  "description": "Default capabilities for BlessFresh desktop app",
   "windows": [
     "main"
   ],

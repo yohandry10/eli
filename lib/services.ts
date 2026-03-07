@@ -240,6 +240,148 @@ export async function createPaymentMethod(payload: { name: string }) {
   return data
 }
 
+// ─── Clients ────────────────────────────────────────────────────────────────
+
+export async function getClients() {
+  const adminSupabase = getAdminSupabase()
+  const ownerUserId = await getOwnerUserId()
+  const { data, error } = await adminSupabase
+    .from('clients')
+    .select('*')
+    .eq('owner_user_id', ownerUserId)
+    .order('name', { ascending: true })
+  if (error) throw new Error(error.message)
+  return data
+}
+
+export async function createClient(payload: {
+  name: string
+  phone: string
+  email?: string
+  address?: string
+  notes?: string
+}) {
+  const adminSupabase = getAdminSupabase()
+  const ownerUserId = await getOwnerUserId()
+  const { data, error } = await adminSupabase
+    .from('clients')
+    .insert({
+      name: payload.name,
+      phone: payload.phone,
+      email: payload.email || null,
+      address: payload.address || null,
+      notes: payload.notes || null,
+      owner_user_id: ownerUserId,
+    })
+    .select()
+  if (error) throw new Error(error.message)
+  return data
+}
+
+export async function updateClient(id: string, payload: Partial<{
+  name: string
+  phone: string
+  email: string
+  address: string
+  notes: string
+}>) {
+  const adminSupabase = getAdminSupabase()
+  const ownerUserId = await getOwnerUserId()
+  const { data, error } = await adminSupabase
+    .from('clients')
+    .update(payload)
+    .eq('id', id)
+    .eq('owner_user_id', ownerUserId)
+    .select()
+  if (error) throw new Error(error.message)
+  return data?.[0]
+}
+
+export async function deleteClient(id: string) {
+  const adminSupabase = getAdminSupabase()
+  const ownerUserId = await getOwnerUserId()
+  const { error } = await adminSupabase
+    .from('clients')
+    .delete()
+    .eq('id', id)
+    .eq('owner_user_id', ownerUserId)
+  if (error) throw new Error(error.message)
+}
+
+// ─── Inventory ──────────────────────────────────────────────────────────────
+
+export async function getInventoryItems() {
+  const adminSupabase = getAdminSupabase()
+  const ownerUserId = await getOwnerUserId()
+  const { data, error } = await adminSupabase
+    .from('inventory_items')
+    .select('*')
+    .eq('owner_user_id', ownerUserId)
+    .order('name', { ascending: true })
+  if (error) throw new Error(error.message)
+  return data
+}
+
+export async function createInventoryItem(payload: {
+  name: string
+  category: string
+  quantity: number
+  unit: string
+  min_stock: number
+  cost_per_unit: number
+  notes?: string
+}) {
+  const adminSupabase = getAdminSupabase()
+  const ownerUserId = await getOwnerUserId()
+  const { data, error } = await adminSupabase
+    .from('inventory_items')
+    .insert({
+      name: payload.name,
+      category: payload.category,
+      quantity: payload.quantity,
+      unit: payload.unit,
+      min_stock: payload.min_stock,
+      cost_per_unit: payload.cost_per_unit,
+      notes: payload.notes || null,
+      owner_user_id: ownerUserId,
+    })
+    .select()
+  if (error) throw new Error(error.message)
+  return data
+}
+
+export async function updateInventoryItem(id: string, payload: Partial<{
+  name: string
+  category: string
+  quantity: number
+  unit: string
+  min_stock: number
+  cost_per_unit: number
+  notes: string
+}>) {
+  const adminSupabase = getAdminSupabase()
+  const ownerUserId = await getOwnerUserId()
+  const { data, error } = await adminSupabase
+    .from('inventory_items')
+    .update(payload)
+    .eq('id', id)
+    .eq('owner_user_id', ownerUserId)
+    .select()
+  if (error) throw new Error(error.message)
+  return data?.[0]
+}
+
+export async function deleteInventoryItem(id: string) {
+  const adminSupabase = getAdminSupabase()
+  const ownerUserId = await getOwnerUserId()
+  const { error } = await adminSupabase
+    .from('inventory_items')
+    .delete()
+    .eq('id', id)
+    .eq('owner_user_id', ownerUserId)
+  if (error) throw new Error(error.message)
+}
+
 // ─── Stats ───────────────────────────────────────────────────────────────────
 
 export async function getStats() {

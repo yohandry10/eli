@@ -10,6 +10,8 @@ import {
   Package,
   Settings,
   LogOut,
+  Users,
+  Boxes,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
@@ -37,6 +39,16 @@ const navItems = [
     icon: Package,
   },
   {
+    label: 'Clientes',
+    href: '/dashboard/clients',
+    icon: Users,
+  },
+  {
+    label: 'Inventario',
+    href: '/dashboard/inventory',
+    icon: Boxes,
+  },
+  {
     label: 'Configuración',
     href: '/dashboard/settings',
     icon: Settings,
@@ -49,12 +61,11 @@ export function DashboardSidebar() {
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (typeof window === 'undefined') return
-    const protocol = window.location.protocol
-    const isDesktopProtocol =
-      protocol === 'tauri:' || protocol === 'asset:' || protocol === 'app:' || protocol === 'file:'
-    if (!isDesktopProtocol) return
+    const isTauri = !!(window as any).__TAURI_INTERNALS__
+    const isTauriProd = isTauri && window.location.hostname === 'tauri.localhost'
+    if (!isTauriProd) return
     e.preventDefault()
-    const desktopHref = href === '/dashboard' ? '/dashboard.html' : `${href}.html`
+    const desktopHref = href === '/dashboard' ? '/dashboard.html' : `/dashboard${href.replace('/dashboard', '')}.html`
     window.location.assign(desktopHref)
   }
 
@@ -72,7 +83,7 @@ export function DashboardSidebar() {
     <aside className="w-64 bg-sidebar border-r border-sidebar-border hidden md:flex flex-col">
       {/* Logo */}
       <div className="p-6 border-b border-sidebar-border">
-        <h1 className="text-2xl font-bold text-sidebar-foreground">LavaPro</h1>
+        <h1 className="text-2xl font-bold text-sidebar-foreground">BlessFresh</h1>
         <p className="text-xs text-sidebar-foreground/70 mt-1">Panel de control</p>
       </div>
 
