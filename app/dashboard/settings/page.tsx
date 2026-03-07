@@ -6,10 +6,7 @@ import { PaymentMethodsManager } from '@/components/dashboard/settings/payment-m
 import { Download, Monitor } from 'lucide-react'
 
 export default function SettingsPage() {
-  const windowsInstallerUrl =
-    process.env.NEXT_PUBLIC_WINDOWS_APP_URL?.trim() || '/downloads/LavaPro-setup-0.1.1.exe'
-  const downloadEnabled = windowsInstallerUrl.length > 0
-  const isExternalDownload = /^https?:\/\//i.test(windowsInstallerUrl)
+  const windowsInstallerUrl = '/downloads/LavaPro-setup-0.1.1.exe'
 
   return (
     <div className="p-8">
@@ -47,32 +44,15 @@ export default function SettingsPage() {
                   Instala LavaPro en tu PC para usarlo sin navegador, más rápido y siempre disponible.
                 </p>
               </div>
-              {downloadEnabled ? (
-                <a
-                  href={windowsInstallerUrl}
-                  {...(isExternalDownload
-                    ? { target: '_blank', rel: 'noopener noreferrer' }
-                    : { download: true })}
-                  className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 font-medium px-6 py-2.5 rounded-lg transition-colors"
-                >
-                  <Download className="w-4 h-4" />
-                  Descargar para Windows
-                </a>
-              ) : (
-                <button
-                  type="button"
-                  disabled
-                  className="inline-flex items-center gap-2 bg-muted text-muted-foreground font-medium px-6 py-2.5 rounded-lg cursor-not-allowed"
-                >
-                  <Download className="w-4 h-4" />
-                  Descargar para Windows
-                </button>
-              )}
-              <p className="text-xs text-muted-foreground">
-                {downloadEnabled
-                  ? 'v1.0.1 · Windows 10/11 · 64-bit'
-                  : 'Descarga no disponible.'}
-              </p>
+              <a
+                href={windowsInstallerUrl}
+                download="LavaPro-setup-0.1.1.exe"
+                className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 font-medium px-6 py-2.5 rounded-lg transition-colors"
+              >
+                <Download className="w-4 h-4" />
+                Descargar para Windows
+              </a>
+              <p className="text-xs text-muted-foreground">v1.0.1 · Windows 10/11 · 64-bit</p>
             </div>
           </TabsContent>
         </Tabs>
