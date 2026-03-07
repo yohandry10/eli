@@ -73,20 +73,22 @@ export function DashboardSidebar() {
             (item.href !== '/dashboard' && pathname.startsWith(item.href))
 
           return (
-            <Link key={item.href} href={item.href}>
-              <Button
-                variant={isActive ? 'default' : 'ghost'}
-                className={cn(
-                  'w-full justify-start',
-                  isActive
-                    ? 'bg-sidebar-primary text-sidebar-primary-foreground'
-                    : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
-                )}
-              >
+            <Button
+              key={item.href}
+              asChild
+              variant={isActive ? 'default' : 'ghost'}
+              className={cn(
+                'w-full justify-start',
+                isActive
+                  ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                  : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+              )}
+            >
+              <Link href={item.href}>
                 <Icon className="mr-2 h-4 w-4" />
                 {item.label}
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           )
         })}
       </nav>

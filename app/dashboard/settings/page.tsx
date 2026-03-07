@@ -6,7 +6,7 @@ import { PaymentMethodsManager } from '@/components/dashboard/settings/payment-m
 import { Download, Monitor } from 'lucide-react'
 
 export default function SettingsPage() {
-  const windowsInstallerUrl = '/downloads/LavaPro-setup-0.1.1.exe'
+  const windowsInstallerUrl = '/downloads/LavaPro-setup-0.1.2.exe'
 
   return (
     <div className="p-8">
@@ -46,13 +46,13 @@ export default function SettingsPage() {
               </div>
               <a
                 href={windowsInstallerUrl}
-                download="LavaPro-setup-0.1.1.exe"
+                download="LavaPro-setup-0.1.2.exe"
                 className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 font-medium px-6 py-2.5 rounded-lg transition-colors"
               >
                 <Download className="w-4 h-4" />
                 Descargar para Windows
               </a>
-              <p className="text-xs text-muted-foreground">v1.0.1 · Windows 10/11 · 64-bit</p>
+              <p className="text-xs text-muted-foreground">v1.0.2 · Windows 10/11 · 64-bit</p>
             </div>
           </TabsContent>
         </Tabs>
