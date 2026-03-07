@@ -1,6 +1,6 @@
 {
   "productName": "LavaPro",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "identifier": "com.lavapro.app",
   "build": {
     "beforeDevCommand": "pnpm dev",
@@ -11,7 +11,9 @@
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "LavaPro",
+        "url": "/dashboard",
         "width": 1280,
         "height": 800,
         "minWidth": 900,

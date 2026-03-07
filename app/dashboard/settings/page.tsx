@@ -7,8 +7,7 @@ import { Download, Monitor } from 'lucide-react'
 
 export default function SettingsPage() {
   const windowsInstallerUrl =
-    process.env.NEXT_PUBLIC_WINDOWS_APP_URL?.trim() ||
-    (process.env.NODE_ENV === 'development' ? '/downloads/LavaPro-setup.exe' : '')
+    process.env.NEXT_PUBLIC_WINDOWS_APP_URL?.trim() || '/downloads/LavaPro-setup-0.1.1.exe'
   const downloadEnabled = windowsInstallerUrl.length > 0
   const isExternalDownload = /^https?:\/\//i.test(windowsInstallerUrl)
 
@@ -71,8 +70,8 @@ export default function SettingsPage() {
               )}
               <p className="text-xs text-muted-foreground">
                 {downloadEnabled
-                  ? 'v1.0.0 · Windows 10/11 · 64-bit'
-                  : 'Descarga no disponible. Configura NEXT_PUBLIC_WINDOWS_APP_URL en Vercel.'}
+                  ? 'v1.0.1 · Windows 10/11 · 64-bit'
+                  : 'Descarga no disponible.'}
               </p>
             </div>
           </TabsContent>

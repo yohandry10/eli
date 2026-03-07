@@ -1,6 +1,6 @@
 [package]
 name = "lavapro"
-version = "0.1.0"
+version = "0.1.1"
 description = "LavaPro - Sistema de Gestión para Lavandería"
 authors = []
 edition = "2021"
