@@ -1,9 +1,12 @@
 import { getAdminSupabase, getOwnerUserId } from './desktop-supabase'
 import { startOfDay, endOfDay, startOfMonth, endOfMonth, eachDayOfInterval, format } from 'date-fns'
+import { isDesktopAppRuntime } from './services-desktop-offline'
+import * as desktopOffline from './services-desktop-offline'
 
 // ─── Products ────────────────────────────────────────────────────────────────
 
 export async function getProducts() {
+  if (isDesktopAppRuntime()) return desktopOffline.getProducts()
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { data, error } = await adminSupabase
@@ -21,6 +24,7 @@ export async function createProduct(payload: {
   is_active?: boolean
   category_id?: string
 }) {
+  if (isDesktopAppRuntime()) return desktopOffline.createProduct(payload)
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   let categoryId = payload.category_id
@@ -61,6 +65,7 @@ export async function createProduct(payload: {
 }
 
 export async function deleteProduct(id: string) {
+  if (isDesktopAppRuntime()) return desktopOffline.deleteProduct(id)
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { error } = await adminSupabase
@@ -77,6 +82,7 @@ export async function updateProduct(id: string, payload: Partial<{
   default_price: number
   is_active: boolean
 }>) {
+  if (isDesktopAppRuntime()) return desktopOffline.updateProduct(id, payload)
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { data, error } = await adminSupabase
@@ -92,6 +98,7 @@ export async function updateProduct(id: string, payload: Partial<{
 // ─── Sales ───────────────────────────────────────────────────────────────────
 
 export async function getSales() {
+  if (isDesktopAppRuntime()) return desktopOffline.getSales()
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { data, error } = await adminSupabase
@@ -110,6 +117,7 @@ export async function createSale(payload: {
   unit_price: number
   payment_method_id: string
 }) {
+  if (isDesktopAppRuntime()) return desktopOffline.createSale(payload)
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { data, error } = await adminSupabase
@@ -129,6 +137,7 @@ export async function createSale(payload: {
 }
 
 export async function deleteSale(id: string) {
+  if (isDesktopAppRuntime()) return desktopOffline.deleteSale(id)
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { error } = await adminSupabase
@@ -142,6 +151,7 @@ export async function deleteSale(id: string) {
 // ─── Expenses ────────────────────────────────────────────────────────────────
 
 export async function getExpenses() {
+  if (isDesktopAppRuntime()) return desktopOffline.getExpenses()
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { data, error } = await adminSupabase
@@ -161,6 +171,7 @@ export async function createExpense(payload: {
   supplier: string
   description?: string
 }) {
+  if (isDesktopAppRuntime()) return desktopOffline.createExpense(payload)
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { data, error } = await adminSupabase
@@ -180,6 +191,7 @@ export async function createExpense(payload: {
 }
 
 export async function deleteExpense(id: string) {
+  if (isDesktopAppRuntime()) return desktopOffline.deleteExpense(id)
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { error } = await adminSupabase
@@ -193,6 +205,7 @@ export async function deleteExpense(id: string) {
 // ─── Categories ──────────────────────────────────────────────────────────────
 
 export async function getCategories() {
+  if (isDesktopAppRuntime()) return desktopOffline.getCategories()
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { data, error } = await adminSupabase
@@ -205,6 +218,7 @@ export async function getCategories() {
 }
 
 export async function createCategory(payload: { name: string; type: 'product' | 'expense' }) {
+  if (isDesktopAppRuntime()) return desktopOffline.createCategory(payload)
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { data, error } = await adminSupabase
@@ -218,6 +232,7 @@ export async function createCategory(payload: { name: string; type: 'product' | 
 // ─── Payment Methods ─────────────────────────────────────────────────────────
 
 export async function getPaymentMethods() {
+  if (isDesktopAppRuntime()) return desktopOffline.getPaymentMethods()
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { data, error } = await adminSupabase
@@ -230,6 +245,7 @@ export async function getPaymentMethods() {
 }
 
 export async function createPaymentMethod(payload: { name: string }) {
+  if (isDesktopAppRuntime()) return desktopOffline.createPaymentMethod(payload)
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { data, error } = await adminSupabase
@@ -243,6 +259,7 @@ export async function createPaymentMethod(payload: { name: string }) {
 // ─── Clients ────────────────────────────────────────────────────────────────
 
 export async function getClients() {
+  if (isDesktopAppRuntime()) return desktopOffline.getClients()
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { data, error } = await adminSupabase
@@ -261,6 +278,7 @@ export async function createClient(payload: {
   address?: string
   notes?: string
 }) {
+  if (isDesktopAppRuntime()) return desktopOffline.createClient(payload)
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { data, error } = await adminSupabase
@@ -285,6 +303,7 @@ export async function updateClient(id: string, payload: Partial<{
   address: string
   notes: string
 }>) {
+  if (isDesktopAppRuntime()) return desktopOffline.updateClient(id, payload)
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { data, error } = await adminSupabase
@@ -298,6 +317,7 @@ export async function updateClient(id: string, payload: Partial<{
 }
 
 export async function deleteClient(id: string) {
+  if (isDesktopAppRuntime()) return desktopOffline.deleteClient(id)
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { error } = await adminSupabase
@@ -311,6 +331,7 @@ export async function deleteClient(id: string) {
 // ─── Inventory ──────────────────────────────────────────────────────────────
 
 export async function getInventoryItems() {
+  if (isDesktopAppRuntime()) return desktopOffline.getInventoryItems()
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { data, error } = await adminSupabase
@@ -331,6 +352,7 @@ export async function createInventoryItem(payload: {
   cost_per_unit: number
   notes?: string
 }) {
+  if (isDesktopAppRuntime()) return desktopOffline.createInventoryItem(payload)
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { data, error } = await adminSupabase
@@ -359,6 +381,7 @@ export async function updateInventoryItem(id: string, payload: Partial<{
   cost_per_unit: number
   notes: string
 }>) {
+  if (isDesktopAppRuntime()) return desktopOffline.updateInventoryItem(id, payload)
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { data, error } = await adminSupabase
@@ -372,6 +395,7 @@ export async function updateInventoryItem(id: string, payload: Partial<{
 }
 
 export async function deleteInventoryItem(id: string) {
+  if (isDesktopAppRuntime()) return desktopOffline.deleteInventoryItem(id)
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const { error } = await adminSupabase
@@ -385,6 +409,7 @@ export async function deleteInventoryItem(id: string) {
 // ─── Stats ───────────────────────────────────────────────────────────────────
 
 export async function getStats() {
+  if (isDesktopAppRuntime()) return desktopOffline.getStats()
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const now = new Date()
@@ -427,6 +452,7 @@ export async function getStats() {
 // ─── Chart Data ──────────────────────────────────────────────────────────────
 
 export async function getChartData() {
+  if (isDesktopAppRuntime()) return desktopOffline.getChartData()
   const adminSupabase = getAdminSupabase()
   const ownerUserId = await getOwnerUserId()
   const now = new Date()
