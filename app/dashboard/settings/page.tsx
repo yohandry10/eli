@@ -1,12 +1,65 @@
 'use client'
 
+import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CategoriesManager } from '@/components/dashboard/settings/categories-manager'
 import { PaymentMethodsManager } from '@/components/dashboard/settings/payment-methods-manager'
 import { Download, Monitor } from 'lucide-react'
+import { toast } from 'sonner'
+
+const WINDOWS_INSTALLERS = [
+  { versionLabel: 'v1.0.3', build: '0.1.3', fileName: 'LavaPro-setup-0.1.3.exe' },
+  { versionLabel: 'v1.0.2', build: '0.1.2', fileName: 'LavaPro-setup-0.1.2.exe' },
+  { versionLabel: 'v1.0.1', build: '0.1.1', fileName: 'LavaPro-setup-0.1.1.exe' },
+] as const
 
 export default function SettingsPage() {
-  const windowsInstallerUrl = '/downloads/BlessFresh-setup-0.1.3.exe'
+  const [isResolvingDownload, setIsResolvingDownload] = useState(false)
+  const latestInstaller = WINDOWS_INSTALLERS[0]
+
+  const startDownload = (url: string, downloadFileName: string) => {
+    const link = document.createElement('a')
+    link.href = url
+    link.download = downloadFileName
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+  }
+
+  const handleDownloadWindows = async () => {
+    if (isResolvingDownload) return
+
+    setIsResolvingDownload(true)
+
+    try {
+      for (const installer of WINDOWS_INSTALLERS) {
+        const installerUrl = `/downloads/${installer.fileName}`
+
+        try {
+          const response = await fetch(installerUrl, { method: 'HEAD', cache: 'no-store' })
+          if (!response.ok) continue
+
+          startDownload(installerUrl, `BlessFresh-setup-${installer.build}.exe`)
+
+          if (installer.fileName === latestInstaller.fileName) {
+            toast.success('Descarga iniciada.')
+          } else {
+            toast.warning(
+              `La versión ${latestInstaller.versionLabel} no está disponible. Se descargó ${installer.versionLabel}.`
+            )
+          }
+
+          return
+        } catch {
+          continue
+        }
+      }
+
+      toast.error('No hay instalador disponible en este momento. Contacta a soporte.')
+    } finally {
+      setIsResolvingDownload(false)
+    }
+  }
 
   return (
     <div className="p-8">
@@ -44,15 +97,18 @@ export default function SettingsPage() {
                   Instala BlessFresh en tu PC para usarlo sin navegador, más rápido y siempre disponible.
                 </p>
               </div>
-              <a
-                href={windowsInstallerUrl}
-                download="BlessFresh-setup-0.1.3.exe"
-                className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 font-medium px-6 py-2.5 rounded-lg transition-colors"
+              <button
+                type="button"
+                onClick={handleDownloadWindows}
+                disabled={isResolvingDownload}
+                className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 font-medium px-6 py-2.5 rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 <Download className="w-4 h-4" />
-                Descargar para Windows
-              </a>
-              <p className="text-xs text-muted-foreground">v1.0.3 · Windows 10/11 · 64-bit</p>
+                {isResolvingDownload ? 'Verificando instalador...' : 'Descargar para Windows'}
+              </button>
+              <p className="text-xs text-muted-foreground">
+                {latestInstaller.versionLabel} · Windows 10/11 · 64-bit
+              </p>
             </div>
           </TabsContent>
         </Tabs>
